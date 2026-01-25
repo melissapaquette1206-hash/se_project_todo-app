@@ -42,4 +42,4 @@ Modular, reusable functions
 
 This project is deployed on GitHub Pages:
 
-- ADD LINK HERE
+(https://melissapaquette1206-hash.github.io/se_project_todo-app/)
