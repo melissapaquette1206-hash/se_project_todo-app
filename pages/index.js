@@ -20,8 +20,12 @@ const closeModal = (modal) => {
 
 const generateTodo = (data) => {
   const todo = new Todo(data, "#todo-template");
-  const todoElement = todo.getView();
-  return todoElement;
+  return todo.getView();
+};
+
+const renderTodo = (data) => {
+  const todoElement = generateTodo(data);
+  todosList.append(todoElement);
 };
 
 addTodoButton.addEventListener("click", () => {
@@ -32,33 +36,30 @@ addTodoCloseBtn.addEventListener("click", () => {
   closeModal(addTodoPopup);
 });
 
-addTodoForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const name = evt.target.name.value;
-  const dateInput = evt.target.date.value;
-
-  let date;
-  if (dateInput) {
-    date = new Date(dateInput);
-    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-  } else {
-    date = undefined;
-  }
-
-  const _renderTodo = (item) => {
-    const el = generateTodo(item);
-    todosList.append(el);
-  };
-
-  const id = uuidv4();
-  const values = { name, date, id };
-  _renderTodo(values);
-  closeModal(addTodoPopup);
-
-  initialTodos.forEach(_renderTodo);
-});
-
 const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
 newTodoValidator.enableValidation();
 
-newTodoValidator.resetValidation();
+addTodoForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+
+  const name = evt.target.name.value;
+  const dateInput = evt.target.date.value;
+
+  let date = null;
+  if (dateInput) {
+    date = new Date(dateInput);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+  }
+
+  const id = uuidv4();
+  const values = { name, date, id };
+
+  renderTodo(values);
+
+  newTodoValidator.resetValidation();
+  closeModal(addTodoPopup);
+});
+
+initialTodos.forEach((item) => {
+  renderTodo(item);
+});
